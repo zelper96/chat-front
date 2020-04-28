@@ -9,7 +9,13 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
-    "vue": "^2.6.11"
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "multer": "^1.4.2",
+    "socket.io": "^2.3.0",
+    "uws": "^100.0.1",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

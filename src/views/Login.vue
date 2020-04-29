@@ -6,17 +6,28 @@
             <button type="button" @click="MessageBtn()">메세지</button>
         </div>
 
-        <!--<button type="button" @click="fileUpload()">파일</button>-->
+
+
+        <!--<div>-->
+            <!--<input :ref="fileInput" type="file" hidden @change="fileDataValue">-->
+            <!--<button @colick="fileLoad">파일 </button>-->
+            <!--<img :src="uploadFileData" style="width: 200px; height: 200px" v-if="uploadFileData.length>0"/>-->
+        <!--</div>-->
 
         <div>
-            <input type="file" @change="fileload()" ref="fileload()" accept="image/*">
-            <img :src="uploadImageFile" style="width: 200px; height: 200px" v-if="uploadImageFile.length>0"/>
+            <input ref="fileInput" name="files" accept="*/*" type="file" hidden @change="onChangeFileEvent">
+            <button type="button" @click="fileBtn">이미지 업로드</button>
+            <img :src="imageUrl" style="width: 200px; height: 200px" v-if="imageUrl.length>0"/>
         </div>
+
 
     </div>
 
 
 </template>
+
+
+
 
 <script>
 
@@ -26,8 +37,8 @@
             return{
 
                 name:'',
-                msg:[],
-                uploadImageFile:'',
+                msg:'',
+                imageUrl:'',
 
             };
         },
@@ -36,30 +47,36 @@
 
                 this.$socket.emit('message',{
                     name: this.name,
-                    message:'hello world',
+                    message:'',
                 });
 
             },
-            fileUpload(){
-                this.$socket.emit('fileupload',{
+            fileBtn() {
 
-                });
+                fileUpload();
+                this.$refs.fileInput.click();
+
+
             },
-            fileload(event){
-                let input = event.target;
+            onChangeFileEvent(e) {
 
-                if (input.file && input.files[0]){
+                // 이미지 미리보기 데이터 가져오기
+                ((function () {
+                    console.log(e.target.files[0]);
+                    const file = e.target.files[0]; // Get first index in files
+                    this.imageUrl = URL.createObjectURL(file); // Create File URL
 
-                    let reader = new FileReader();
 
-                    reader.onload = function (event) {
-                        console.log(event.target.result);
-                        this.uploadImageFile = event.target.result;
 
-                    };
+                })());
 
-                    reader.readAsDataURL(input.files[0]);
-                }
+
+                // server 메세지 보내기
+                (function () {
+                    this.$socket.emit('fileupload',{
+
+                    });
+                }());
 
             },
 
